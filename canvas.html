@@ -1,0 +1,92 @@
+<html>
+	<head>
+		<title></title>
+	</head>
+	<body>
+		<div id="body"></div>
+		<script type="text/javascript">
+			var toolkit = {
+				drawCircle:function(options)
+				{
+					if (typeof options.canvas !== 'undefined')
+					{
+
+						var canvas = options.canvas;
+						var x = options.x || 50;
+						var y = options.y || 50;
+						var radius = options.radius || 35;
+						var thickness = options.thickness || 5;
+						var startAngle = options.startAngle || 0;
+						var endAngle = options.endAngle || 360;
+						var color = options.color || '#fff';
+
+						var ctx = canvas.getContext("2d");
+						var startRadians = ((startAngle-90)/180) * Math.PI;
+						var endRadians = ((endAngle-90)/180) * Math.PI;
+
+						ctx.beginPath();
+						ctx.arc(x,y,radius,startRadians, endRadians);
+						ctx.lineWidth = thickness;
+						ctx.strokeStyle = color;
+						ctx.lineCap = 'butt';
+						ctx.stroke();
+					}
+				},
+				clear: function(canvas)
+				{
+					var ctx = canvas.getContext("2d");
+					ctx.clearRect(0, 0, canvas.width, canvas.height);
+				}
+			};
+			(function() {
+
+				// Create a canvas and get its drawing context
+				var canvas = document.createElement("canvas");
+				canvas.width = 100;
+				canvas.height = 100;
+				document.getElementById("body").appendChild(canvas);
+				var context = canvas.getContext("2d");
+
+				var iteration = 0,
+					maxIterations = 180;
+
+				var redraw = function()
+				{
+					var angle = (360 / maxIterations) * iteration;
+					toolkit.clear(canvas);
+
+					// Draw a background
+					toolkit.drawCircle({
+						canvas: canvas,
+						x: 50,
+						y: 50,
+						radius: 35,
+						thickness: 20,
+						color: '#eee'
+					});
+
+					// Overlay a progress bar
+					toolkit.drawCircle({
+						canvas: canvas,
+						x: 50,
+						y: 50,
+						radius: 35,
+						thickness: 20,
+						endAngle: angle,
+						color: '#79CDCD'
+					});
+
+					// Manage the timer
+					if (iteration === maxIterations)
+					{
+						clearTimeout(timer);
+						console.log("Stopped timer");
+					}
+
+					iteration++;
+				}
+				var timer = setInterval(redraw, 50);
+			})();
+		</script>
+	</body>
+</html>
